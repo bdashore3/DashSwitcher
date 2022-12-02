@@ -20,8 +20,6 @@ I also wanted to make this script useable on Windows without any external depend
 
 5. In `target`, write `powershell.exe -F <path name>` where the path name is the auto-filled path for the shortcut
 
-6. 
-
 ## Possible features
 
 Take these with a grain of salt. I made this script on a whim.
