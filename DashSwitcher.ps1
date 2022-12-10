@@ -18,6 +18,20 @@ $errorActionPreference = 'Stop'
 $DashPath = "C:\Program Files\Oculus\Support\oculus-dash\dash\bin"
 $wshell = New-Object -ComObject Wscript.Shell
 
+# MARK: Registry Paths
+
+# Steam Paths
+$SteamPath = Get-ItemProperty -Path "HKCU:\Software\Valve\Steam" | Select-Object -ExpandProperty SteamPath
+$SteamXRPath = "${SteamPath}\steamapps\common\SteamVR\steamxr_win64.json"
+
+# Oculus Paths
+$OculusPath = Get-ItemProperty -Path "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Uninstall\Oculus" | Select-Object -ExpandProperty InstallLocation
+$OculusXRPath = "${OculusPath}Support\oculus-runtime\oculus_openxr_64.json"
+
+# OpenXR Config variables and paths
+$OpenXRMajorVersion = 1
+$OpenXRPath = "HKLM:\SOFTWARE\Khronos\OpenXR\${OpenXRMajorVersion}"
+
 # MARK: Enums for popups
 Enum AlertButton {
     Ok = 0
@@ -39,9 +53,9 @@ Enum AlertIcon {
 function Main {
     if (Test-Path -Path "${DashPath}\OculusDash.exe") {
         if (Test-Path -Path "${DashPath}\OculusDash.exe.bak") {
-            ActivateDash
+            Enable-Dash
         } elseif (Test-Path -Path "${DashPath}\OculusDash.exe.kill") {
-            ActivateKiller
+            Enable-Killer
         } else {
             Show-Popup -Title "Error" -Message "There is no other dash exe to switch. Please download OculusKiller to use this script!" -Icon Exclamation
         }
@@ -66,10 +80,12 @@ function Show-Popup {
 }
 
 # Activates OculusKiller and renames dash to .bak
-function ActivateKiller {
+function Enable-Killer {
     try {
         Rename-Item "${DashPath}\OculusDash.exe" "OculusDash.exe.bak"
         Rename-Item "${DashPath}\OculusDash.exe.kill" "OculusDash.exe"
+        $FormattedPath = $SteamXRPath -replace '/','\'
+        Set-ItemProperty -Path $OpenXRPath -Name ActiveRuntime -Value $FormattedPath
         Show-Popup -Title "Success" -Message "Switched to OculusKiller"
     } catch {
         Show-Popup -Title "Error" -Message "There was an error when switching to OculusKiller: `n`n$_" -Icon Exclamation
@@ -77,10 +93,12 @@ function ActivateKiller {
 }
 
 # Activates Oculus Dash and renames OculusKiller to .kill
-function ActivateDash {
+function Enable-Dash {
     try {
         Rename-Item "${DashPath}\OculusDash.exe" "OculusDash.exe.kill"
         Rename-Item "${DashPath}\OculusDash.exe.bak" "OculusDash.exe"
+        $FormattedPath = $OculusXRPath -replace '/','\'
+        Set-ItemProperty -Path $OpenXRPath -Name ActiveRuntime -Value $FormattedPath
         Show-Popup -Title "Success" -Message "Switched to Oculus Dash"
     } catch {
         Show-Popup -Title "Error" -Message "There was an error when switching to Oculus Dash: `n`n$_" -Icon Exclamation
