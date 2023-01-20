@@ -2,6 +2,10 @@
 
 A PowerShell script to switch between Oculus Dash and [OculusKiller](https://github.com/LibreQuest/OculusKiller)
 
+## Disclaimer
+
+Please do not annoy the OculusKiller dev about this switcher! She does not support them due to her vision for the project.
+
 ## Why did I make this?
 
 I wanted to switch between OculusKiller and the Oculus Dash since I have oculus games on my PC. However, navigating to ProgramFiles every time a huge pain and it would be easier just for a few clicks to automatically switch between OculusKiller and the stock dash.
@@ -34,7 +38,4 @@ I try to make comments/commits as detailed as possible, but if you don't underst
 
 Creator/Developer: kingbri
 Developer Website: [kingbri.dev](https://kingbri.dev)
-Developer Discord: kingbri#6666
-Join the discord server here: [My Server](https://discord.gg/pswt7by)
-
 
